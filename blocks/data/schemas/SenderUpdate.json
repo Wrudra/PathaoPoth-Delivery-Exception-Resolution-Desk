@@ -1,0 +1,19 @@
+{
+  "schemaName": "SenderUpdate",
+  "collectionName": "SenderUpdates",
+  "schemaType": 1,
+  "description": "Sanitised, sender-facing timeline. The only case data the sender role ever reads: no internal notes, no receiver contact details.",
+  "fields": [
+    { "name": "caseId", "type": "String" },
+    { "name": "caseNumber", "type": "String" },
+    { "name": "parcelId", "type": "String" },
+    { "name": "trackingId", "type": "String" },
+    { "name": "senderUserId", "type": "String" },
+    { "name": "status", "type": "String", "description": "Public status label: investigating | action_planned | in_progress | resolved | returned" },
+    { "name": "headline", "type": "String" },
+    { "name": "detail", "type": "String", "description": "Plain-language, sanitised explanation" },
+    { "name": "nextAction", "type": "String" },
+    { "name": "expectedResolutionAt", "type": "DateTime" },
+    { "name": "occurredAt", "type": "DateTime" }
+  ]
+}

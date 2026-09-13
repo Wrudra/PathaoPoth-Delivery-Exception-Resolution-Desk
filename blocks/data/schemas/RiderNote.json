@@ -1,0 +1,25 @@
+{
+  "schemaName": "RiderNote",
+  "collectionName": "RiderNotes",
+  "schemaType": 1,
+  "description": "Raw rider note (often Banglish) plus the structured incident the desk derived from it.",
+  "fields": [
+    { "name": "caseId", "type": "String" },
+    { "name": "caseNumber", "type": "String" },
+    { "name": "parcelId", "type": "String" },
+    { "name": "trackingId", "type": "String" },
+    { "name": "riderId", "type": "String" },
+    { "name": "riderName", "type": "String" },
+    { "name": "riderUserId", "type": "String" },
+    { "name": "rawText", "type": "String" },
+    { "name": "language", "type": "String", "description": "banglish | bn | en" },
+    { "name": "structuredJson", "type": "String", "description": "attempts, failureReason, addressQuality, availabilityHints, flags" },
+    { "name": "recommendedAction", "type": "String" },
+    { "name": "confidence", "type": "Float" },
+    { "name": "source", "type": "String", "description": "heuristic | gemini" },
+    { "name": "status", "type": "String", "description": "pending | structured | confirmed | manual_review" },
+    { "name": "confirmedByName", "type": "String" },
+    { "name": "confirmedAt", "type": "DateTime" },
+    { "name": "submittedAt", "type": "DateTime" }
+  ]
+}

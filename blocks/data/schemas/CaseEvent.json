@@ -1,0 +1,23 @@
+{
+  "schemaName": "CaseEvent",
+  "collectionName": "CaseEvents",
+  "schemaType": 1,
+  "description": "Append-only timeline and ownership trail for a case. Rows with internal=true are never shown to senders.",
+  "fields": [
+    { "name": "caseId", "type": "String" },
+    { "name": "caseNumber", "type": "String" },
+    { "name": "type", "type": "String", "description": "opened | note_added | rider_note | ai_structured | next_step_confirmed | transfer_requested | transfer_acknowledged | transfer_declined | status_changed | sla_breached | resolved | closed | sender_update" },
+    { "name": "actorUserId", "type": "String" },
+    { "name": "actorName", "type": "String" },
+    { "name": "actorRole", "type": "String" },
+    { "name": "actorTeam", "type": "String" },
+    { "name": "fromOwnerTeam", "type": "String" },
+    { "name": "fromOwnerName", "type": "String" },
+    { "name": "toOwnerTeam", "type": "String" },
+    { "name": "toOwnerName", "type": "String" },
+    { "name": "message", "type": "String" },
+    { "name": "internal", "type": "Boolean", "description": "true = staff-only; never surfaced in the sender view" },
+    { "name": "payloadJson", "type": "String" },
+    { "name": "occurredAt", "type": "DateTime" }
+  ]
+}

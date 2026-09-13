@@ -1,0 +1,293 @@
+{
+  "security": [
+    {
+      "schemaName": "CaseEvent",
+      "schemaId": "a7689aa7-16cb-4c71-a243-fde84638fabf",
+      "accessLevel": 1,
+      "operation": 0,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "CaseEvent",
+      "schemaId": "a7689aa7-16cb-4c71-a243-fde84638fabf",
+      "accessLevel": 1,
+      "operation": 1,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "CaseEvent",
+      "schemaId": "a7689aa7-16cb-4c71-a243-fde84638fabf",
+      "accessLevel": 1,
+      "operation": 2,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "CaseEvent",
+      "schemaId": "a7689aa7-16cb-4c71-a243-fde84638fabf",
+      "accessLevel": 1,
+      "operation": 3,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "ExceptionCase",
+      "schemaId": "b5fbf002-a64f-4826-ad81-1d8c8aa87736",
+      "accessLevel": 1,
+      "operation": 0,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "ExceptionCase",
+      "schemaId": "b5fbf002-a64f-4826-ad81-1d8c8aa87736",
+      "accessLevel": 1,
+      "operation": 1,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "ExceptionCase",
+      "schemaId": "b5fbf002-a64f-4826-ad81-1d8c8aa87736",
+      "accessLevel": 1,
+      "operation": 2,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "ExceptionCase",
+      "schemaId": "b5fbf002-a64f-4826-ad81-1d8c8aa87736",
+      "accessLevel": 1,
+      "operation": 3,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "Parcel",
+      "schemaId": "85f255eb-1daf-4652-a3a1-391cf3275765",
+      "accessLevel": 1,
+      "operation": 0,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "Parcel",
+      "schemaId": "85f255eb-1daf-4652-a3a1-391cf3275765",
+      "accessLevel": 1,
+      "operation": 1,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "Parcel",
+      "schemaId": "85f255eb-1daf-4652-a3a1-391cf3275765",
+      "accessLevel": 1,
+      "operation": 2,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "Parcel",
+      "schemaId": "85f255eb-1daf-4652-a3a1-391cf3275765",
+      "accessLevel": 1,
+      "operation": 3,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "PrecallTask",
+      "schemaId": "e4799051-0d5f-4005-9257-cbe6d526c9db",
+      "accessLevel": 1,
+      "operation": 0,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "PrecallTask",
+      "schemaId": "e4799051-0d5f-4005-9257-cbe6d526c9db",
+      "accessLevel": 1,
+      "operation": 1,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "PrecallTask",
+      "schemaId": "e4799051-0d5f-4005-9257-cbe6d526c9db",
+      "accessLevel": 1,
+      "operation": 2,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "PrecallTask",
+      "schemaId": "e4799051-0d5f-4005-9257-cbe6d526c9db",
+      "accessLevel": 1,
+      "operation": 3,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "Rider",
+      "schemaId": "0340fd23-2e45-4290-8c0d-c2f6817ef81e",
+      "accessLevel": 1,
+      "operation": 0,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "Rider",
+      "schemaId": "0340fd23-2e45-4290-8c0d-c2f6817ef81e",
+      "accessLevel": 1,
+      "operation": 1,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "Rider",
+      "schemaId": "0340fd23-2e45-4290-8c0d-c2f6817ef81e",
+      "accessLevel": 1,
+      "operation": 2,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "Rider",
+      "schemaId": "0340fd23-2e45-4290-8c0d-c2f6817ef81e",
+      "accessLevel": 1,
+      "operation": 3,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "RiderNote",
+      "schemaId": "d732fe67-1c28-4e42-b05d-db4c39a19905",
+      "accessLevel": 1,
+      "operation": 0,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "RiderNote",
+      "schemaId": "d732fe67-1c28-4e42-b05d-db4c39a19905",
+      "accessLevel": 1,
+      "operation": 1,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "RiderNote",
+      "schemaId": "d732fe67-1c28-4e42-b05d-db4c39a19905",
+      "accessLevel": 1,
+      "operation": 2,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "RiderNote",
+      "schemaId": "d732fe67-1c28-4e42-b05d-db4c39a19905",
+      "accessLevel": 1,
+      "operation": 3,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "RoutePrediction",
+      "schemaId": "f16fce5b-6bf8-4551-ba63-46c0a4b7aa76",
+      "accessLevel": 1,
+      "operation": 0,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "RoutePrediction",
+      "schemaId": "f16fce5b-6bf8-4551-ba63-46c0a4b7aa76",
+      "accessLevel": 1,
+      "operation": 1,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "RoutePrediction",
+      "schemaId": "f16fce5b-6bf8-4551-ba63-46c0a4b7aa76",
+      "accessLevel": 1,
+      "operation": 2,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "RoutePrediction",
+      "schemaId": "f16fce5b-6bf8-4551-ba63-46c0a4b7aa76",
+      "accessLevel": 1,
+      "operation": 3,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "SenderUpdate",
+      "schemaId": "b0c148c9-d86a-459d-b846-60260d4eabfa",
+      "accessLevel": 1,
+      "operation": 0,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "SenderUpdate",
+      "schemaId": "b0c148c9-d86a-459d-b846-60260d4eabfa",
+      "accessLevel": 1,
+      "operation": 1,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "SenderUpdate",
+      "schemaId": "b0c148c9-d86a-459d-b846-60260d4eabfa",
+      "accessLevel": 1,
+      "operation": 2,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "SenderUpdate",
+      "schemaId": "b0c148c9-d86a-459d-b846-60260d4eabfa",
+      "accessLevel": 1,
+      "operation": 3,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "StaffProfile",
+      "schemaId": "068ee872-4d15-48c8-ba9c-b5a575500d3a",
+      "accessLevel": 1,
+      "operation": 0,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "StaffProfile",
+      "schemaId": "068ee872-4d15-48c8-ba9c-b5a575500d3a",
+      "accessLevel": 1,
+      "operation": 1,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "StaffProfile",
+      "schemaId": "068ee872-4d15-48c8-ba9c-b5a575500d3a",
+      "accessLevel": 1,
+      "operation": 2,
+      "policyType": 0,
+      "fieldNames": []
+    },
+    {
+      "schemaName": "StaffProfile",
+      "schemaId": "068ee872-4d15-48c8-ba9c-b5a575500d3a",
+      "accessLevel": 1,
+      "operation": 3,
+      "policyType": 0,
+      "fieldNames": []
+    }
+  ],
+  "policies": []
+}

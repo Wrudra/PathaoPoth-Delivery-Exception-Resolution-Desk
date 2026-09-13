@@ -1,0 +1,17 @@
+{
+  "schemaName": "StaffProfile",
+  "collectionName": "StaffProfiles",
+  "schemaType": 1,
+  "description": "Maps an IAM user to their hub and team so cases can be scoped and ownership can be assigned by name.",
+  "fields": [
+    { "name": "userId", "type": "String", "isUniqueData": true },
+    { "name": "email", "type": "String", "isPIIData": true },
+    { "name": "displayName", "type": "String" },
+    { "name": "role", "type": "String", "description": "hub-staff | rider | care-agent | ops-manager | sender" },
+    { "name": "hubCode", "type": "String", "description": "For hub staff and riders" },
+    { "name": "team", "type": "String", "description": "hub:<code> | care | ops | sender" },
+    { "name": "phone", "type": "String", "isPIIData": true },
+    { "name": "riderId", "type": "String", "description": "Rider.ItemId when role = rider" },
+    { "name": "senderCompany", "type": "String", "description": "When role = sender" }
+  ]
+}

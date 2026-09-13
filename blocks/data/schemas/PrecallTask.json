@@ -1,0 +1,24 @@
+{
+  "schemaName": "PrecallTask",
+  "collectionName": "PrecallTasks",
+  "schemaType": 1,
+  "description": "A proactive call to a receiver on an at-risk route, created from a route prediction before the next batch fails.",
+  "fields": [
+    { "name": "predictionId", "type": "String" },
+    { "name": "routeCode", "type": "String" },
+    { "name": "parcelId", "type": "String" },
+    { "name": "trackingId", "type": "String" },
+    { "name": "receiverName", "type": "String" },
+    { "name": "receiverPhone", "type": "String", "isPIIData": true },
+    { "name": "area", "type": "String" },
+    { "name": "codAmount", "type": "Float" },
+    { "name": "reason", "type": "String" },
+    { "name": "assignedToTeam", "type": "String" },
+    { "name": "assignedToName", "type": "String" },
+    { "name": "status", "type": "String", "description": "pending | confirmed | reschedule | no_answer | cancelled" },
+    { "name": "outcomeNote", "type": "String" },
+    { "name": "createdByName", "type": "String" },
+    { "name": "calledAt", "type": "DateTime" },
+    { "name": "dueAt", "type": "DateTime" }
+  ]
+}

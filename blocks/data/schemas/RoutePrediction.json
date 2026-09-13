@@ -1,0 +1,28 @@
+{
+  "schemaName": "RoutePrediction",
+  "collectionName": "RoutePredictions",
+  "schemaType": 1,
+  "description": "A forecast that a route will fail again next week, with the evidence behind the call and the manager's decision.",
+  "fields": [
+    { "name": "routeCode", "type": "String" },
+    { "name": "originHubCode", "type": "String" },
+    { "name": "destHubCode", "type": "String" },
+    { "name": "weekStart", "type": "DateTime", "description": "Start of the observed week" },
+    { "name": "horizonWeekStart", "type": "DateTime", "description": "Start of the predicted week" },
+    { "name": "riskLevel", "type": "String", "description": "low | medium | high" },
+    { "name": "riskScore", "type": "Float" },
+    { "name": "predictedExceptionRate", "type": "Float" },
+    { "name": "baselineExceptionRate", "type": "Float" },
+    { "name": "weekOverWeekChange", "type": "Float", "description": "e.g. 0.41 for +41%" },
+    { "name": "dominantType", "type": "String" },
+    { "name": "evidenceJson", "type": "String" },
+    { "name": "recommendedAction", "type": "String", "description": "precall_cod_customers | reassign_rider | address_verification | monitor" },
+    { "name": "narrative", "type": "String" },
+    { "name": "source", "type": "String", "description": "heuristic | gemini" },
+    { "name": "generatedAt", "type": "DateTime" },
+    { "name": "generatedByName", "type": "String" },
+    { "name": "decision", "type": "String", "description": "none | precall_scheduled | route_changed | dismissed" },
+    { "name": "decidedByName", "type": "String" },
+    { "name": "decidedAt", "type": "DateTime" }
+  ]
+}

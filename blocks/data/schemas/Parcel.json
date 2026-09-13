@@ -1,0 +1,29 @@
+{
+  "schemaName": "Parcel",
+  "collectionName": "Parcels",
+  "schemaType": 1,
+  "description": "A shipment moving between hubs. Receiver phone is PII and is never exposed to the sender-facing view.",
+  "fields": [
+    { "name": "trackingId", "type": "String", "isUniqueData": true, "description": "Public tracking id, e.g. PP-2409-118203" },
+    { "name": "senderUserId", "type": "String", "description": "IAM user id of the merchant / sender who owns this parcel" },
+    { "name": "senderName", "type": "String" },
+    { "name": "senderCompany", "type": "String" },
+    { "name": "receiverName", "type": "String" },
+    { "name": "receiverPhone", "type": "String", "isPIIData": true },
+    { "name": "receiverAddress", "type": "String", "isPIIData": true },
+    { "name": "area", "type": "String", "description": "Delivery area / landmark, e.g. GEC Circle" },
+    { "name": "originHubCode", "type": "String" },
+    { "name": "destHubCode", "type": "String" },
+    { "name": "routeCode", "type": "String", "description": "origin->destination lane, e.g. MIR10-CTGGEC" },
+    { "name": "riderId", "type": "String", "description": "Rider.ItemId of the last assigned rider" },
+    { "name": "riderName", "type": "String" },
+    { "name": "codAmount", "type": "Float", "description": "Cash on delivery in BDT; 0 for prepaid" },
+    { "name": "paymentType", "type": "String", "description": "cod | prepaid" },
+    { "name": "weightKg", "type": "Float" },
+    { "name": "status", "type": "String", "description": "in_transit | out_for_delivery | exception | delivered | returned" },
+    { "name": "lastTouchedByName", "type": "String" },
+    { "name": "lastTouchedAt", "type": "DateTime" },
+    { "name": "dispatchedAt", "type": "DateTime" },
+    { "name": "promisedAt", "type": "DateTime", "description": "Delivery promise shown to the sender" }
+  ]
+}

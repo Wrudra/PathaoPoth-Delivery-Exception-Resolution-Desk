@@ -1,0 +1,19 @@
+{
+  "schemaName": "Rider",
+  "collectionName": "Riders",
+  "schemaType": 1,
+  "description": "Delivery rider (in-house or vendor) attached to a hub. Linked to an IAM user when the rider signs in.",
+  "fields": [
+    { "name": "riderCode", "type": "String", "isUniqueData": true, "description": "Short human code, e.g. R-MIR-014" },
+    { "name": "name", "type": "String" },
+    { "name": "phone", "type": "String", "isPIIData": true },
+    { "name": "hubCode", "type": "String", "description": "Home hub code, e.g. MIR10" },
+    { "name": "vendor", "type": "String", "description": "in_house | vendor" },
+    { "name": "vendorName", "type": "String" },
+    { "name": "userId", "type": "String", "description": "IAM user id when the rider has a login" },
+    { "name": "active", "type": "Boolean" },
+    { "name": "rating", "type": "Float" },
+    { "name": "joinedAt", "type": "DateTime" },
+    { "name": "skills", "type": "String", "isArray": true, "description": "e.g. cod, fragile, evening" }
+  ]
+}
