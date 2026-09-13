@@ -5,6 +5,7 @@
   "description": "PathaoPoth — Delivery Exception Resolution Desk on SELISE Blocks",
   "scripts": {
     "dev": "node scripts/dev.mjs",
+    "dev:https": "node scripts/dev.mjs",
     "dev:http": "next dev",
     "build": "next build",
     "start": "next start",

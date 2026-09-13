@@ -97,7 +97,7 @@ echo "127.0.0.1 dblyom-elffd.slsblx.com" | sudo tee -a /etc/hosts
 npm run cert                    # writes .cert/ (git-ignored)
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain .cert/dev-cert.pem   # macOS
 
-npm run dev                     # https://dblyom-elffd.slsblx.com:5173
+npm run dev:https               # https://dblyom-elffd.slsblx.com:3000
 ```
 
 Checks: `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`.

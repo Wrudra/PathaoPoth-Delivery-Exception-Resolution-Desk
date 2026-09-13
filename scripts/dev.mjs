@@ -3,9 +3,10 @@ import dns from "node:dns/promises";
 import { ensureDevCert } from "./generate-cert.mjs";
 import { devHost, devPort, readDevEnv } from "./env.mjs";
 
-// `npm run dev`: serve the app over HTTPS on the project's own domain and the
-// port registered in the OIDC client's redirect URI. Anything else (http://,
-// localhost, another port) loads fine but never receives the session cookie.
+// `npm run dev:https`: serve the app over HTTPS on the project's own domain and
+// the port registered in the OIDC client's redirect URI. Anything else
+// (http://, localhost, another port) loads fine but never receives the Blocks
+// session cookie, so this script refuses to fall back to localhost.
 const env = readDevEnv();
 const host = devHost(env);
 const port = devPort(env);
@@ -18,29 +19,30 @@ if (!host) {
 const cert = ensureDevCert({ domain: host });
 if (cert.created) console.log(`Created dev certificate for ${host} in .cert/`);
 
+// The domain must resolve to this machine before we bind to it; otherwise the
+// browser would reach the Blocks cloud edge instead of the dev server.
+let resolved;
 try {
-  const { address } = await dns.lookup(host);
-  if (address !== "127.0.0.1" && address !== "::1") {
-    console.warn(`\nWarning: ${host} resolves to ${address}, not this machine.`);
-    console.warn(`Add this line to your hosts file so the browser reaches the dev server:\n  127.0.0.1 ${host}\n`);
-  }
+  resolved = (await dns.lookup(host)).address;
 } catch {
-  console.warn(`\n${host} does not resolve yet. Add this line to your hosts file (macOS/Linux: /etc/hosts):`);
-  console.warn(`  127.0.0.1 ${host}\n`);
+  resolved = undefined;
+}
+if (resolved !== "127.0.0.1" && resolved !== "::1") {
+  console.error(`\n${host} resolves to ${resolved ?? "nothing"}, not this machine.`);
+  console.error("Add the hosts entry once, then run this again:\n");
+  console.error(`  echo "127.0.0.1 ${host}" | sudo tee -a /etc/hosts\n`);
+  process.exit(1);
 }
 
-console.log(`Starting Next.js on https://${host}:${port}  (open exactly this URL, not localhost)\n`);
+console.log(`\nPathaoPoth desk → https://${host}:${port}\n(open exactly this URL; localhost will not receive the login cookie)\n`);
 
-// Bind every interface rather than the hostname: until the hosts entry exists
-// the domain resolves to the Blocks cloud IP and the bind would fail. The
-// domain itself is allowed as a dev origin in next.config.ts.
 const child = spawn(
   "npx",
   [
     "next",
     "dev",
     "-H",
-    "0.0.0.0",
+    host,
     "-p",
     String(port),
     "--experimental-https",

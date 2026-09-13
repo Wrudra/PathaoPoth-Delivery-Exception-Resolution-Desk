@@ -30,5 +30,5 @@ export function devHost(env) {
 }
 
 export function devPort(env) {
-  return Number(env.BLOCKS_DEV_PORT || 5173);
+  return Number(env.BLOCKS_DEV_PORT || 3000);
 }

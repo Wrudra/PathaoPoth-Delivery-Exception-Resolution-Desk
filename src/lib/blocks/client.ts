@@ -3,7 +3,7 @@ import { blocksConfig } from "./config";
 import { forceRefreshAccessToken, getValidAccessToken } from "./auth";
 
 // The OIDC redirect URI must match the origin the app is actually served from
-// (https://<domain>:5173 locally, https://<domain> deployed) -- both are
+// (https://<domain>:3000 locally, https://<domain> deployed) -- both are
 // registered on the public client. In the browser that is the live origin;
 // during server rendering the configured app domain stands in, since no
 // login can start there anyway.
