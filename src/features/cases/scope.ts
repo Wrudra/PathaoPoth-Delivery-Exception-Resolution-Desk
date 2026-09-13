@@ -43,6 +43,7 @@ export function canConfirmNextStep(actor: Actor | undefined): boolean {
 
 export function canTransfer(actor: Actor | undefined, item: ExceptionCase): boolean {
   if (!actor) return false;
+  if (actor.role === "rider" || actor.role === "sender") return false;
   if (actor.role === "ops-manager") return true;
   return item.ownerUserId === actor.userId || item.ownerTeam === actor.team;
 }

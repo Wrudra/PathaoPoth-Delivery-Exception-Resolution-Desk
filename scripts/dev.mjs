@@ -12,7 +12,7 @@ const host = devHost(env);
 const port = devPort(env);
 
 if (!host) {
-  console.error("BLOCKS_DEV_HOST is not set. Copy .env.example to .env first.");
+  console.error("BLOCKS_DEV_HOST is not set. Add it to .env first.");
   process.exit(1);
 }
 

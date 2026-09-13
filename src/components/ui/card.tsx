@@ -24,7 +24,7 @@ export function CardHeader({
         {icon ? <span className="mt-0.5 text-ink-500">{icon}</span> : null}
         <div className="min-w-0">
           <h3 className="text-[15px] font-semibold leading-5 text-ink-900">{title}</h3>
-          {subtitle ? <p className="mt-0.5 text-[13px] leading-5 text-ink-500">{subtitle}</p> : null}
+          {subtitle ? <div className="mt-0.5 text-[13px] leading-5 text-ink-500">{subtitle}</div> : null}
         </div>
       </div>
       {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}

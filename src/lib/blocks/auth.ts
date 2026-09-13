@@ -125,7 +125,7 @@ export async function fetchSessionClaims(): Promise<Record<string, unknown> | un
 
 export async function startLogin(returnTo?: string): Promise<void> {
   if (!blocksConfig.oidcClientId) {
-    throw new Error("Login is not configured. Set NEXT_PUBLIC_BLOCKS_OIDC_CLIENT_ID in .env.");
+    throw new Error("Login is not configured.");
   }
   storage()?.setItem(RETURN_KEY, returnTo || "/");
   await blocksClient.auth.idp.redirectToProvider();

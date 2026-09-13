@@ -23,10 +23,22 @@ export type Actor = {
 };
 
 /** Defaults used when a user signs in for the first time without a mapping. */
-function defaultProfile(userId: string, name: string, email: string | undefined, role: RoleSlug, riders: Rider[]): Omit<StaffProfile, "ItemId"> {
+function defaultProfile(
+  userId: string,
+  name: string,
+  email: string | undefined,
+  role: RoleSlug,
+  riders: Rider[],
+  staff: StaffProfile[] = []
+): Omit<StaffProfile, "ItemId"> {
   switch (role) {
-    case "hub-staff":
-      return { userId, email, displayName: name, role, hubCode: "MIR10", team: teamForHub("MIR10") };
+    case "hub-staff": {
+      // Origin hub (Mirpur 10) is the first mapping; a later hub-staff user
+      // defaults to the demo destination hub so Mirpur → care → GEC can close.
+      const originTaken = staff.some((item) => item.role === "hub-staff" && item.hubCode === "MIR10");
+      const hubCode = originTaken ? "CTGGEC" : "MIR10";
+      return { userId, email, displayName: name, role, hubCode, team: teamForHub(hubCode) };
+    }
     case "rider": {
       // Attach the first unlinked Mirpur rider so the demo rider immediately
       // sees the parcels the seed assigned to "Jashim".
@@ -82,7 +94,14 @@ export function useActor() {
   const provision = useMutation({
     mutationFn: async () => {
       if (!userId || !role) return;
-      const payload = defaultProfile(userId, userDisplayName(user) || user?.email || "Staff", user?.email, role, riders.data ?? []);
+      const payload = defaultProfile(
+        userId,
+        userDisplayName(user) || user?.email || "Staff",
+        user?.email,
+        role,
+        riders.data ?? [],
+        profiles.data ?? []
+      );
       await createOne<StaffProfile>("StaffProfile", payload);
       if (role === "rider" && payload.riderId) {
         await updateOne<Rider>("Rider", payload.riderId, { userId });
@@ -110,7 +129,7 @@ export function useActor() {
       email: user?.email,
       role,
       roles: user?.roles ?? [],
-      team: existing?.team ?? (role ? defaultProfile(userId, "", undefined, role, []).team : "unassigned"),
+      team: existing?.team ?? (role ? defaultProfile(userId, "", undefined, role, [], profiles.data ?? []).team : "unassigned"),
       hubCode: existing?.hubCode,
       riderId: existing?.riderId,
       senderCompany: existing?.senderCompany,

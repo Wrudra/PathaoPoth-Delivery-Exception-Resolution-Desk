@@ -41,7 +41,7 @@ Browser (Next.js 16 App Router, React 19, TanStack Query)
 │    └─ localization.*    languages + dictionaries (en-US, bn-BD)
 │
 └─ Next.js route handlers (server only)
-     └─ /api/ai/*  Gemini structured output; GEMINI_API_KEY never reaches the browser
+     └─ /api/ai/*  Gemini structured output (API key stays on the server)
 ```
 
 ### Data model (Blocks Data Gateway, `blocks/data/schemas/`)
@@ -74,7 +74,7 @@ Hub/team scope comes from `StaffProfile`; a first login without a mapping is pro
 
 ### AI
 
-- **Rider-note structuring** — `src/features/ai/riderNoteEngine.ts` is a deterministic Banglish rule engine (attempt counting incl. Bangla number words, phone/guard/address/COD/availability lexicon, evidence quotes, confidence). When `GEMINI_API_KEY` is set, `gemini.server.ts` asks Gemini (`gemini-3.8-flash`, JSON `responseSchema`) and **cross-checks** it against the rule engine: disagreement with modest confidence is capped and routed to manual review. Without a key, or if the model fails, the rule engine answers — the desk never blocks on the model.
+- **Rider-note structuring** — `src/features/ai/riderNoteEngine.ts` is a deterministic Banglish rule engine. When a Gemini key is present on the server, `gemini.server.ts` asks Gemini with a JSON schema and **cross-checks** it against the rule engine; disagreement with modest confidence is capped and routed to manual review. Without a key, or if the model fails, the rule engine answers.
 - **Route forecasting** — `src/features/ai/routeRisk.ts`: rolling weekly rates per lane, Holt trend projection one week out, risk score from named evidence (WoW growth, type concentration, rider concentration, COD exposure, repeat areas). Gemini optionally writes the narrative and a pre-call script from that evidence only.
 
 ### Security model
@@ -90,7 +90,6 @@ Blocks hosted login only sets its cookie over HTTPS on the project's own domain 
 
 ```bash
 npm install
-cp .env.example .env            # public identifiers only; add GEMINI_API_KEY to .env.local if you have one
 
 # one-time, needs sudo
 echo "127.0.0.1 dblyom-elffd.slsblx.com" | sudo tee -a /etc/hosts

@@ -76,7 +76,7 @@ export function ConfidenceMeter({ value, source }: { value: number; source?: str
   return (
     <div className="flex items-center gap-2" title={`${pct}% confidence${source ? ` (${source})` : ""}`}>
       <div className="h-1.5 w-20 overflow-hidden rounded-full bg-ink-100">
-        <div className={`h-full rounded-full ${tone}`} style={{ width: `${pct}%` }} />
+        <div className={`h-full origin-left rounded-full ${tone}`} style={{ transform: `scaleX(${pct / 100})` }} />
       </div>
       <span className="tabular text-[12px] font-semibold text-ink-700">{pct}%</span>
     </div>

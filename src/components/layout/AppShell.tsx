@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Languages, LogOut, PanelLeftClose, PanelLeftOpen, ShieldAlert, UserRound } from "lucide-react";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { useActor } from "@/features/auth/useStaffProfile";
@@ -14,8 +14,9 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useStoredPreference } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { BrandMark } from "./BrandMark";
-import { isActive, navFor } from "./navItems";
+import { ROLE_HOME, isActive, navFor, roleMayVisit } from "./navItems";
 
 const COLLAPSED_KEY = "pathaopoth:sidebar-collapsed";
 
@@ -33,6 +34,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   }
 
   const items = navFor(actor?.role, actor?.roles ?? []);
+  const allowed = roleMayVisit(actor?.role, pathname);
+
+  useEffect(() => {
+    if (!actor?.role || allowed) return;
+    router.replace(ROLE_HOME[actor.role]);
+  }, [actor?.role, allowed, router]);
+
+  if (actor?.role && !allowed) return <LoadingScreen label="Opening your desk" />;
 
   async function handleLogout() {
     await logout();
@@ -146,7 +155,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <div className="min-w-0">
                   <div className="truncate text-[14px] font-semibold text-ink-900">{actor?.name ?? "…"}</div>
                   {actor?.email ? <div className="truncate text-[12px] font-normal text-ink-500">{actor.email}</div> : null}
-                  {actor?.roles.length ? <div className="mt-0.5 truncate text-[12px] font-normal text-ink-500">{actor.roles.join(", ")}</div> : null}
+                  {actor?.role ? <div className="mt-0.5 truncate text-[12px] font-normal text-ink-500">{ROLE_LABEL[actor.role]}</div> : null}
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

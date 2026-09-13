@@ -28,7 +28,8 @@ export function TransferDialog({
   onSubmit: (team: string, note: string) => Promise<void>;
   pending?: boolean;
 }) {
-  const suggested = item.ownerTeam === "care" ? teamForHub(item.destHubCode) : "care";
+  const destTeam = item.destHubCode ? teamForHub(item.destHubCode) : undefined;
+  const suggested = item.ownerTeam === "care" ? (destTeam ?? teamForHub(item.originHubCode)) : "care";
   const [team, setTeam] = useState(suggested);
   const [note, setNote] = useState("");
 

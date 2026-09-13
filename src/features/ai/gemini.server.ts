@@ -8,10 +8,13 @@ import { incidentSchema, type IncidentSummary, type NoteContext, type RouteForec
 
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
 
+/** Flash models this project has verified against Google AI Studio generateContent. */
+const GEMINI_FALLBACKS = ["gemini-3.5-flash", "gemini-3.6-flash", "gemini-3.7-flash"] as const;
+
 export function geminiConfig(): { apiKey: string; model: string } | undefined {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) return undefined;
-  return { apiKey, model: process.env.GEMINI_MODEL?.trim() || "gemini-3.8-flash" };
+  return { apiKey, model: process.env.GEMINI_MODEL?.trim() || GEMINI_FALLBACKS[0] };
 }
 
 type GeminiResponse = {
@@ -23,25 +26,38 @@ async function generateJson<T>(prompt: string, responseSchema: Record<string, un
   const config = geminiConfig();
   if (!config) throw new Error("Gemini is not configured");
 
-  const response = await fetch(`${GEMINI_ENDPOINT}/${config.model}:generateContent`, {
-    method: "POST",
-    headers: { "content-type": "application/json", "x-goog-api-key": config.apiKey },
-    body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: {
-        responseMimeType: "application/json",
-        responseSchema,
-        thinkingConfig: { thinkingLevel: "LOW" }
-      }
-    }),
-    signal
-  });
+  const models = [config.model, ...GEMINI_FALLBACKS.filter((name) => name !== config.model)];
+  let lastError: Error | undefined;
 
-  const payload = (await response.json().catch(() => ({}))) as GeminiResponse;
-  if (!response.ok) throw new Error(payload.error?.message ?? `Gemini HTTP ${response.status}`);
-  const text = payload.candidates?.[0]?.content?.parts?.map((part) => part.text ?? "").join("") ?? "";
-  if (!text) throw new Error("Gemini returned no content");
-  return { value: parse(JSON.parse(text)), model: config.model };
+  for (const model of models) {
+    const response = await fetch(`${GEMINI_ENDPOINT}/${model}:generateContent`, {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-goog-api-key": config.apiKey },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema
+        }
+      }),
+      signal
+    });
+
+    const payload = (await response.json().catch(() => ({}))) as GeminiResponse;
+    if (!response.ok) {
+      lastError = new Error(payload.error?.message ?? `Gemini HTTP ${response.status}`);
+      if (response.status === 404 || response.status === 429 || response.status === 503) continue;
+      throw lastError;
+    }
+    const text = payload.candidates?.[0]?.content?.parts?.map((part) => part.text ?? "").join("") ?? "";
+    if (!text) {
+      lastError = new Error("Gemini returned no content");
+      continue;
+    }
+    return { value: parse(JSON.parse(text)), model };
+  }
+
+  throw lastError ?? new Error("Gemini request failed");
 }
 
 const INCIDENT_RESPONSE_SCHEMA = {

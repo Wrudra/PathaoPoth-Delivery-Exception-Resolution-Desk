@@ -62,3 +62,14 @@ export function isActive(pathname: string, item: NavItem): boolean {
   // /cases/new has its own entry; keep /cases highlighted only for detail pages.
   return pathname.startsWith(`${item.href}/`) && !NAV_ITEMS.some((other) => other !== item && other.href === pathname);
 }
+
+/** Staff desks and the sender view must not leak into each other, even via a leftover login returnTo. */
+export function roleMayVisit(role: RoleSlug | undefined, pathname: string): boolean {
+  if (!role) return true;
+  if (pathname === "/profile" || pathname.startsWith("/profile/")) return true;
+  if (role === "sender") return pathname === "/sender" || pathname.startsWith("/sender/");
+  if (navFor(role, [role]).some((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))) return true;
+  // Riders open a case from My deliveries; they have no Cases nav item.
+  if (role === "rider" && pathname.startsWith("/cases/")) return true;
+  return false;
+}

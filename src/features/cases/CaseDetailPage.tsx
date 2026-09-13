@@ -133,7 +133,7 @@ export function CaseDetailPage({ id }: { id: string }) {
   const pendingForMe = canAcknowledge(actor, data);
   const isOwner = actor?.userId === data.ownerUserId;
   const terminal = data.status === "resolved" || data.status === "closed";
-  const showPhone = actor?.role === "care-agent" || actor?.role === "ops-manager" || actor?.role === "rider";
+  const showPhone = actor?.role === "care-agent" || actor?.role === "ops-manager" || actor?.role === "rider" || actor?.role === "hub-staff";
 
   return (
     <section>
