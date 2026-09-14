@@ -1,8 +1,8 @@
 {
   "project": {
-    "tenantId": "Db2c5b9f0bfc347a9b5ae933742efbbaf",
+    "tenantId": "Pb2c5b9f0bfc347a9b5ae933742efbbaf",
     "apiUrl": "https://blocksapi.slsblx.com",
-    "appDomain": "https://dblyom-elffd.slsblx.com"
+    "appDomain": "https://pblyom-elffd.slsblx.com"
   },
   "data": {
     "schemas": "blocks/data/schemas",
