@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Bengali } from "next/font/google";
+import Script from "next/script";
 import { Providers } from "@/components/providers/Providers";
+import { readBlocksConfigFromEnv } from "@/lib/blocks/config";
 import "./globals.css";
 
 const inter = Inter({
@@ -32,10 +34,16 @@ export const viewport: Viewport = {
   initialScale: 1
 };
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  const publicConfig = JSON.stringify(readBlocksConfigFromEnv()).replace(/</g, "\\u003c");
   return (
     <html lang="en" className={`${inter.variable} ${bengali.variable} h-full`}>
       <body className="min-h-full font-sans">
+        <Script id="pathaopoth-blocks-config" strategy="beforeInteractive">
+          {`window.__PATHAOPOTH_BLOCKS__=${publicConfig}`}
+        </Script>
         <Providers>{children}</Providers>
       </body>
     </html>

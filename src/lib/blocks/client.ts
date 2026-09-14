@@ -1,6 +1,6 @@
 import { createBlocksClient } from "@seliseblocks/client";
-import { blocksConfig } from "./config";
 import { forceRefreshAccessToken, getValidAccessToken } from "./auth";
+import { getBlocksConfig } from "./config";
 
 // The OIDC redirect URI must match the origin the app is actually served from
 // (https://<domain>:3000 locally, https://<domain> deployed) -- both are
@@ -8,25 +8,37 @@ import { forceRefreshAccessToken, getValidAccessToken } from "./auth";
 // during server rendering the configured app domain stands in, since no
 // login can start there anyway.
 function redirectUri(): string {
-  const origin = typeof window === "undefined" ? blocksConfig.appDomain.replace(/\/+$/, "") : window.location.origin;
+  const origin = typeof window === "undefined" ? getBlocksConfig().appDomain.replace(/\/+$/, "") : window.location.origin;
   return `${origin}/login/callback`;
 }
 
-// The single Blocks API entry point for this app. Every Auth, IAM, Data,
-// Notifier and Localization call goes through this client -- never a
-// hand-written fetch() against a Blocks host. Importing it from
-// server-rendered client components is safe; the redirect/callback helpers
-// only run in event handlers and effects.
-export const blocksClient = createBlocksClient({
-  accessToken: () => getValidAccessToken(),
-  apiUrl: blocksConfig.apiUrl,
-  appDomain: blocksConfig.appDomain,
-  onUnauthorized: () => forceRefreshAccessToken(),
-  oidc: {
-    clientId: blocksConfig.oidcClientId,
-    redirectUri: redirectUri(),
-    scope: blocksConfig.oidcScope,
-    url: blocksConfig.oidcUrl
-  },
-  xBlocksKey: blocksConfig.xBlocksKey
+type BlocksClient = ReturnType<typeof createBlocksClient>;
+
+function createClient(): BlocksClient {
+  const config = getBlocksConfig();
+  return createBlocksClient({
+    accessToken: () => getValidAccessToken(),
+    apiUrl: config.apiUrl,
+    appDomain: config.appDomain,
+    onUnauthorized: () => forceRefreshAccessToken(),
+    oidc: {
+      clientId: config.oidcClientId,
+      redirectUri: redirectUri(),
+      scope: config.oidcScope,
+      url: config.oidcUrl
+    },
+    xBlocksKey: config.xBlocksKey
+  });
+}
+
+let cached: BlocksClient | undefined;
+
+// Built on first use so production can read runtime env (and the layout
+// script) instead of values baked at `next build`.
+export const blocksClient: BlocksClient = new Proxy({} as BlocksClient, {
+  get(_target, prop, _receiver) {
+    cached ??= createClient();
+    const value = Reflect.get(cached as object, prop, cached);
+    return typeof value === "function" ? value.bind(cached) : value;
+  }
 });
