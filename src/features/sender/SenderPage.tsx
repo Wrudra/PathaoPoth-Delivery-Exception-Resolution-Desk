@@ -71,7 +71,7 @@ export function SenderPage() {
 
       <div className="relative mb-4">
         <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400" />
-        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search a tracking id, receiver or area — including parcels without issues" className="pl-10" />
+        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search a tracking id, receiver or area, including parcels without issues" className="pl-10" />
       </div>
 
       {parcels.isLoading || updates.isLoading ? <InlineSpinner label="Loading your parcels…" /> : null}

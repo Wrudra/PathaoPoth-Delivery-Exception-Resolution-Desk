@@ -183,7 +183,7 @@ export function AdminPage() {
                     <label className="grid gap-1 text-[12px] font-semibold text-ink-600">
                       Rider record
                       <Select value={profile.riderId ?? ""} disabled={saveProfile.isPending} onChange={(event) => saveProfile.mutate({ profile, patch: { riderId: event.target.value } })}>
-                        <option value="">— none —</option>
+                        <option value="">- none -</option>
                         {(riders.data ?? []).map((rider) => (
                           <option key={rider.ItemId} value={rider.ItemId}>
                             {rider.riderCode} · {rider.name}

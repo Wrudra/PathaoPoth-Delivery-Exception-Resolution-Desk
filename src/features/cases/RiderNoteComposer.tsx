@@ -46,7 +46,7 @@ export function RiderNoteComposer({
       <CardHeader
         icon={<Bike size={16} />}
         title="Rider note"
-        subtitle={compact ? `Type it the way you'd say it. ${riderName}, the desk will structure it.` : "Rough, Banglish, unpunctuated is fine — the desk structures it into an incident and a next step."}
+        subtitle={compact ? `Type it the way you'd say it. ${riderName}, the desk will structure it.` : "Rough, Banglish, unpunctuated is fine. The desk structures it into an incident and a next step."}
         actions={
           <button onClick={() => setShowSamples((value) => !value)} className="text-[12px] font-semibold text-ink-500 hover:text-ink-900">
             {showSamples ? "Hide samples" : "Samples"}

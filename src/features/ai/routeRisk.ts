@@ -175,7 +175,7 @@ export function analyzeRoutes(cases: ExceptionCase[], parcels: Parcel[], options
       );
     }
     if (dominantType === "refused" && refused.length) {
-      evidence.push(`${Math.round(codShareOfRefused * 100)}% of refused parcels carry COD ≥ ৳1,000 — cash-at-door is the likely driver.`);
+      evidence.push(`${Math.round(codShareOfRefused * 100)}% of refused parcels carry COD ≥ ৳1,000. Cash-at-door is the likely driver.`);
     }
     if (topRider && topRider.share >= 0.3 && topRider.count >= 3) {
       evidence.push(`Rider ${topRider.name} is on ${topRider.count} of ${recentCases.length} recent failures (${Math.round(topRider.share * 100)}%).`);

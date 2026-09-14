@@ -90,7 +90,7 @@ export function CaseDetailPage({ id }: { id: string }) {
       refresh();
       toast({
         tone: incident.needsManualReview ? "info" : "good",
-        title: incident.needsManualReview ? "Note structured — manual review" : `Recommended: ${incident.recommendedAction.replaceAll("_", " ")}`,
+        title: incident.needsManualReview ? "Note structured: manual review" : `Recommended: ${incident.recommendedAction.replaceAll("_", " ")}`,
         description: `${Math.round(incident.confidence * 100)}% confidence · ${incident.source === "gemini" ? "Gemini" : "rule engine"}`
       });
     },
@@ -184,7 +184,7 @@ export function CaseDetailPage({ id }: { id: string }) {
               {data.transferRequestedByName} ({teamLabel(data.ownerTeam)}) is handing this case to {teamLabel(data.pendingOwnerTeam)}
             </div>
             <p className="mt-0.5 text-[13px] leading-5 text-violet-700/90">
-              {data.transferNote ? `“${data.transferNote}” — ` : ""}
+              {data.transferNote ? `“${data.transferNote}” ` : ""}
               {data.ownerName} stays accountable until you acknowledge.
             </p>
           </div>
@@ -221,7 +221,7 @@ export function CaseDetailPage({ id }: { id: string }) {
               {data.pendingOwnerTeam ? <Badge tone="violet" dot pulse className="w-fit">hand-off to {teamLabel(data.pendingOwnerTeam)} pending</Badge> : null}
               <dl className="mt-2 grid grid-cols-2 gap-2 border-t border-ink-100 pt-3 text-[12px]">
                 <Meta label="Handling hub" value={hubName(data.hubCode)} />
-                <Meta label="Rider" value={data.riderName ?? "—"} />
+                <Meta label="Rider" value={data.riderName ?? "-"} />
                 <Meta label="COD" value={data.codAmount ? formatTaka(data.codAmount) : "prepaid"} />
                 <Meta label="SLA" value={`${EXCEPTION_TYPES[data.type].slaHours}h · due ${formatDateTime(data.slaDueAt)}`} />
                 {data.resolution ? <Meta label="Resolution" value={data.resolution} wide /> : null}
@@ -244,7 +244,7 @@ export function CaseDetailPage({ id }: { id: string }) {
                     {parcel.data.area}
                   </div>
                   <div className="inline-flex items-center gap-1.5 text-ink-700">
-                    <Phone size={13} /> {showPhone ? parcel.data.receiverPhone ?? "—" : maskPhone(parcel.data.receiverPhone)}
+                    <Phone size={13} /> {showPhone ? parcel.data.receiverPhone ?? "-" : maskPhone(parcel.data.receiverPhone)}
                   </div>
                   <dl className="mt-2 grid grid-cols-2 gap-2 border-t border-ink-100 pt-3 text-[12px]">
                     <Meta label="Merchant" value={`${parcel.data.senderCompany} · ${parcel.data.senderName}`} />

@@ -36,7 +36,7 @@ export function RiderPage() {
       <PageHeader
         eyebrow={actor?.hubCode ? `${hubName(actor.hubCode)} hub` : "Rider"}
         title={`Salam, ${actor?.name.split(" ")[0] ?? "rider"}`}
-        subtitle="Your stops with an open exception. Tap one and type what happened — the desk turns it into the next step."
+        subtitle="Your stops with an open exception. Tap one and type what happened. The desk turns it into the next step."
       />
 
       {!actor?.riderId ? (
@@ -74,7 +74,7 @@ export function RiderPage() {
                   <MapPin size={13} /> {parcel.receiverAddress ?? parcel.area}
                 </span>
                 <span className="inline-flex items-center gap-1">
-                  <Phone size={13} /> {parcel.receiverPhone ?? "—"}
+                  <Phone size={13} /> {parcel.receiverPhone ?? "-"}
                 </span>
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px] text-ink-500">
@@ -86,7 +86,7 @@ export function RiderPage() {
                     <MessageSquarePlus size={14} /> Add note <ChevronRight size={14} />
                   </span>
                 ) : (
-                  <span className="ml-auto text-ink-400">no case yet — hub staff opens one if delivery fails</span>
+                  <span className="ml-auto text-ink-400">no case yet. Hub staff opens one if delivery fails</span>
                 )}
               </div>
             </div>

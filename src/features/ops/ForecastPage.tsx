@@ -227,7 +227,7 @@ export function ForecastPage() {
                   <div className="mt-2 grid grid-cols-2 gap-2 text-[12px]">
                     <div className="rounded-lg bg-ink-50 px-2.5 py-2">
                       <div className="text-ink-500">Dominant type</div>
-                      <div className="font-semibold text-ink-900">{active.dominantType === "none" ? "—" : EXCEPTION_TYPES[active.dominantType].short} · {Math.round(active.dominantShare * 100)}%</div>
+                      <div className="font-semibold text-ink-900">{active.dominantType === "none" ? "-" : EXCEPTION_TYPES[active.dominantType].short} · {Math.round(active.dominantShare * 100)}%</div>
                     </div>
                     <div className="rounded-lg bg-ink-50 px-2.5 py-2">
                       <div className="text-ink-500">COD share (refused)</div>

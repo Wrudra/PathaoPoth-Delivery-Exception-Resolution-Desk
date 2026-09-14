@@ -38,7 +38,7 @@ export function CarePage() {
 
   return (
     <section>
-      <PageHeader eyebrow="Customer care" title="Care queue" subtitle="Acknowledge hand-offs, confirm the recommended next step, and keep senders informed — in that order." />
+      <PageHeader eyebrow="Customer care" title="Care queue" subtitle="Acknowledge hand-offs, confirm the recommended next step, and keep senders informed, in that order." />
 
       <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-5">
         <Stat label="Awaiting my ack" value={awaitingAck.length} tone={awaitingAck.length ? "warn" : "neutral"} icon={<ArrowLeftRight size={14} />} />

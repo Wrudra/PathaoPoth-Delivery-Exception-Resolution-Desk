@@ -56,13 +56,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           collapsed ? "w-[68px]" : "w-[248px]"
         )}
       >
-        <div className={cn("flex h-16 items-center border-b border-ink-100 px-3", collapsed ? "justify-center" : "justify-between")}>
-          {collapsed ? null : (
-            <Link href="/" className="flex min-w-0 items-center gap-2.5">
-              <BrandMark size={32} />
-              <span className="truncate text-[15px] font-bold tracking-tight text-ink-900">PathaoPoth</span>
-            </Link>
-          )}
+        <div className={cn("flex border-b border-ink-100", collapsed ? "h-auto flex-col items-center gap-1 px-2 py-2.5" : "h-16 items-center justify-between px-3")}>
+          <Link href="/" className="flex min-w-0 items-center gap-2.5" aria-label="PathaoPoth home">
+            <BrandMark size={32} />
+            {collapsed ? null : <span className="truncate text-[15px] font-bold tracking-tight text-ink-900">PathaoPoth</span>}
+          </Link>
           <button
             onClick={toggleCollapsed}
             className="rounded-lg p-2 text-ink-500 hover:bg-ink-100 hover:text-ink-900"

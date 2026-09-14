@@ -261,7 +261,7 @@ export function structureRiderNote(rawText: string, context: NoteContext = {}): 
   if (unavailable) evidence.push({ label: unavailable.rule.label, quote: quote(unavailable.match), weight: unavailable.rule.weight });
 
   const windows = WINDOW_RULES.map((rule) => ({ rule, match: text.match(rule.pattern) })).filter((item) => item.match);
-  const availabilityHints = windows.map((item) => `${WINDOW_LABEL[item.rule.window]} — “${quote(item.match!)}”`);
+  const availabilityHints = windows.map((item) => `${WINDOW_LABEL[item.rule.window]} (“${quote(item.match!)}”)`);
   for (const item of windows) evidence.push({ label: item.rule.label, quote: quote(item.match!), weight: item.rule.weight });
   const preferredWindow: PreferredWindow | null =
     windows.find((item) => item.rule.window === "evening")?.rule.window ??

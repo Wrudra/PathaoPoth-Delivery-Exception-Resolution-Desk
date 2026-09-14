@@ -16,7 +16,7 @@ import { structureRiderNote } from "@/features/ai/riderNoteEngine";
 // Deterministic demo dataset. Same seed → same rows, so the story is stable:
 // Mirpur 10 → Chattogram GEC refused deliveries climb 8 → 10 → 17 → 24 over
 // four rolling weeks (+41% in the last step), three quarters of them COD, a
-// third of them on one rider — enough for the forecaster to name the lane and
+// third of them on one rider, enough for the forecaster to name the lane and
 // recommend a pre-call list.
 
 type Row<T extends SystemFields> = Omit<T, keyof SystemFields>;
@@ -447,7 +447,7 @@ export function buildSeed(now = new Date()): SeedBundle {
             pendingOwnerTeam,
             transferRequestedByName,
             transferRequestedAt,
-            transferNote: pendingOwnerTeam ? "Please take over from here — receiver details confirmed." : undefined,
+            transferNote: pendingOwnerTeam ? "Please take over from here. Receiver details confirmed." : undefined,
             slaDueAt: slaDueAt.toISOString(),
             slaBreached,
             slaBreachedAt: slaBreached ? slaDueAt.toISOString() : undefined,

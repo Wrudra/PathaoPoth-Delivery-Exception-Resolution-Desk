@@ -18,12 +18,12 @@ const bengali = Noto_Sans_Bengali({
 
 export const metadata: Metadata = {
   title: {
-    default: "PathaoPoth — Exception Desk",
+    default: "PathaoPoth Exception Desk",
     template: "%s · PathaoPoth Exception Desk"
   },
   description:
     "Delivery Exception Resolution Desk: every stuck parcel has exactly one owner, every rider note becomes a next step, and the route that will fail next week is named before it does.",
-  icons: { icon: "/pathao-logo.svg" }
+  icons: { icon: [{ url: "/pathao-mark.svg", type: "image/svg+xml" }] }
 };
 
 export const viewport: Viewport = {

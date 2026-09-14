@@ -278,7 +278,7 @@ export async function submitRiderNote(
     actor,
     "ai_structured",
     incident.needsManualReview
-      ? `Structured the rider note (${Math.round(incident.confidence * 100)}% confidence) — below the auto-recommend bar, so it is queued for manual review. ${incident.summary}`
+      ? `Structured the rider note (${Math.round(incident.confidence * 100)}% confidence). Below the auto-recommend bar, so it is queued for manual review. ${incident.summary}`
       : `Structured the rider note: ${incident.summary} Recommended: ${NEXT_STEPS[incident.recommendedAction].label} (${Math.round(incident.confidence * 100)}% confidence, ${incident.source}).`,
     { internal: true, payloadJson: JSON.stringify(incident) }
   );

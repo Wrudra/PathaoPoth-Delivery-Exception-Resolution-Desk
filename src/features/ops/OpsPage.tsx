@@ -68,7 +68,7 @@ export function OpsPage() {
         <Stat label="Exception rate" value={formatPercent(currentRate, 1)} hint={`${formatPercent(previousRate, 1)} last week · lane volume basis`} />
         <Stat label="SLA breached (active)" value={breachedActive} tone={breachedActive ? "warn" : "good"} icon={<AlertTriangle size={14} />} />
         <Stat label="SLA hit rate" value={formatPercent(slaHitRate(data))} hint="resolved within threshold" tone="good" />
-        <Stat label="Avg time to resolve" value={averageResolutionHours(data) ? `${averageResolutionHours(data)!.toFixed(1)}h` : "—"} />
+        <Stat label="Avg time to resolve" value={averageResolutionHours(data) ? `${averageResolutionHours(data)!.toFixed(1)}h` : "-"} />
       </div>
 
       {cases.isLoading ? <InlineSpinner label="Crunching exceptions…" /> : null}
@@ -166,8 +166,8 @@ export function OpsPage() {
                       <td className="tabular px-3 py-3 text-right text-ink-500">{row.previous}</td>
                       <td className={`tabular px-3 py-3 text-right font-semibold ${row.change !== null && row.change > 0.2 ? "text-brand-600" : row.change !== null && row.change < -0.2 ? "text-good-700" : "text-ink-700"}`}>{formatSignedPercent(row.change)}</td>
                       <td className="tabular px-3 py-3 text-right text-ink-700">{formatPercent(row.rate ?? null, 1)}</td>
-                      <td className="px-3 py-3">{dominant ? <Badge>{EXCEPTION_TYPES[dominant[0]].short} · {dominant[1]}</Badge> : "—"}</td>
-                      <td className="px-5 py-3">{risk ? <Badge tone={RISK_TONE[risk.riskLevel]}>{risk.riskLevel} · {Math.round(risk.riskScore * 100)}</Badge> : "—"}</td>
+                      <td className="px-3 py-3">{dominant ? <Badge>{EXCEPTION_TYPES[dominant[0]].short} · {dominant[1]}</Badge> : "-"}</td>
+                      <td className="px-5 py-3">{risk ? <Badge tone={RISK_TONE[risk.riskLevel]}>{risk.riskLevel} · {Math.round(risk.riskScore * 100)}</Badge> : "-"}</td>
                     </tr>
                   );
                 })}
@@ -177,7 +177,7 @@ export function OpsPage() {
         </Card>
 
         <Card>
-          <CardHeader icon={<Bike size={16} />} title="By rider" subtitle="Most exceptions this week — bad route or bad luck?" />
+          <CardHeader icon={<Bike size={16} />} title="By rider" subtitle="Most exceptions this week: bad route or bad luck?" />
           <CardBody className="p-0">
             <ul className="divide-y divide-ink-100">
               {byRider.map((row) => {

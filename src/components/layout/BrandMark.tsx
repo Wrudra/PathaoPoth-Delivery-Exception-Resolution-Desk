@@ -1,17 +1,18 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-/** The Pathao glyph (white disc, red mark) on the brand-red tile. */
+/** Pathao glyph as-is: white disc, red mark. No tile or frame. */
 export function BrandMark({ size = 32, className }: { size?: number; className?: string }) {
-  const inner = Math.round(size * 0.66);
   return (
-    <span
-      className={cn("grid shrink-0 place-items-center rounded-[28%] bg-brand-500 shadow-[0_1px_2px_rgba(232,51,48,0.35)]", className)}
-      style={{ width: size, height: size }}
+    <Image
+      src="/pathao-mark.svg"
+      alt=""
+      width={size}
+      height={size}
+      className={cn("shrink-0", className)}
+      priority
       aria-hidden
-    >
-      <Image src="/pathao-mark.svg" alt="" width={inner} height={inner} priority />
-    </span>
+    />
   );
 }
 

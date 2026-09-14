@@ -60,7 +60,7 @@ export function CaseTable({ cases, emptyTitle = "No cases", emptyDescription, hi
                 <td className="px-4 py-3">
                   <SlaBadge item={item} />
                 </td>
-                <td className="tabular px-4 py-3 text-right font-semibold text-ink-900">{item.codAmount ? formatTaka(item.codAmount) : "—"}</td>
+                <td className="tabular px-4 py-3 text-right font-semibold text-ink-900">{item.codAmount ? formatTaka(item.codAmount) : "-"}</td>
                 <td className="px-4 py-3 text-ink-500">{formatRelative(item.openedAt)}</td>
                 <td className="px-2 py-3 text-ink-400">
                   <Link href={`/cases/${item.ItemId}`} aria-label={`Open ${item.caseNumber}`} className="inline-flex rounded-md p-1 hover:bg-ink-100 hover:text-ink-900">

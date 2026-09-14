@@ -105,7 +105,7 @@ export function DeclineDialog({
         }
       >
         <Field label="Reason" required>
-          <Textarea value={reason} onChange={(event) => setReason(event.target.value)} placeholder="e.g. Parcel is still at Mirpur hub — dispatch it to GEC first." className="min-h-[96px]" />
+          <Textarea value={reason} onChange={(event) => setReason(event.target.value)} placeholder="e.g. Parcel is still at Mirpur hub. Dispatch it to GEC first." className="min-h-[96px]" />
         </Field>
       </DialogContent>
     </Dialog>

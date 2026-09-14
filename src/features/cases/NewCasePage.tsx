@@ -18,7 +18,7 @@ import { formatRelative, formatTaka, maskPhone } from "@/lib/format";
 import { openCase } from "./caseService";
 import { canOpenCase } from "./scope";
 
-// The four-field quick open: parcel, type, where (hub — pre-filled from the
+// The four-field quick open: parcel, type, where (hub, pre-filled from the
 // staff profile), who last touched it (pre-filled from the parcel). Seconds,
 // not minutes.
 export function NewCasePage() {
@@ -119,10 +119,10 @@ export function NewCasePage() {
             </Select>
           </Field>
           <div className="grid gap-3 sm:grid-cols-2">
-            <ReadOnly label="Where (hub)" value={parcel ? `${hubName(actor?.hubCode ?? parcel.originHubCode)}` : "—"} hint={parcel ? `${hubShort(parcel.originHubCode)} → ${hubShort(parcel.destHubCode)}` : undefined} />
-            <ReadOnly label="Who last touched it" value={parcel?.lastTouchedByName ?? parcel?.riderName ?? "—"} hint={parcel?.lastTouchedAt ? formatRelative(parcel.lastTouchedAt) : undefined} />
-            <ReadOnly label="Receiver" value={parcel?.receiverName ?? "—"} hint={parcel ? `${parcel.area} · ${maskPhone(parcel.receiverPhone)}` : undefined} />
-            <ReadOnly label="Owner on open" value={actor?.name ?? "—"} hint="You, until you hand it off and someone acknowledges" />
+            <ReadOnly label="Where (hub)" value={parcel ? `${hubName(actor?.hubCode ?? parcel.originHubCode)}` : "-"} hint={parcel ? `${hubShort(parcel.originHubCode)} → ${hubShort(parcel.destHubCode)}` : undefined} />
+            <ReadOnly label="Who last touched it" value={parcel?.lastTouchedByName ?? parcel?.riderName ?? "-"} hint={parcel?.lastTouchedAt ? formatRelative(parcel.lastTouchedAt) : undefined} />
+            <ReadOnly label="Receiver" value={parcel?.receiverName ?? "-"} hint={parcel ? `${parcel.area} · ${maskPhone(parcel.receiverPhone)}` : undefined} />
+            <ReadOnly label="Owner on open" value={actor?.name ?? "-"} hint="You, until you hand it off and someone acknowledges" />
           </div>
           <Field label="Note (optional)" hint="Internal. Not shown to the sender.">
             <Textarea value={description} onChange={(event) => setDescription(event.target.value)} placeholder="e.g. Receiver refused at door, said COD amount is wrong." className="min-h-[80px]" />

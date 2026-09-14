@@ -1,17 +1,19 @@
 const bdt = new Intl.NumberFormat("en-BD", { maximumFractionDigits: 0 });
 
+export const EMPTY = "-";
+
 export function formatTaka(amount: number | null | undefined): string {
-  if (amount === null || amount === undefined || Number.isNaN(amount)) return "—";
+  if (amount === null || amount === undefined || Number.isNaN(amount)) return EMPTY;
   return `৳${bdt.format(Math.round(amount))}`;
 }
 
 export function formatPercent(ratio: number | null | undefined, digits = 0): string {
-  if (ratio === null || ratio === undefined || !Number.isFinite(ratio)) return "—";
+  if (ratio === null || ratio === undefined || !Number.isFinite(ratio)) return EMPTY;
   return `${(ratio * 100).toFixed(digits)}%`;
 }
 
 export function formatSignedPercent(ratio: number | null | undefined): string {
-  if (ratio === null || ratio === undefined || !Number.isFinite(ratio)) return "—";
+  if (ratio === null || ratio === undefined || !Number.isFinite(ratio)) return EMPTY;
   const pct = Math.round(ratio * 100);
   return `${pct > 0 ? "+" : ""}${pct}%`;
 }
@@ -24,7 +26,7 @@ export function toDate(value: string | Date | null | undefined): Date | undefine
 
 export function formatDateTime(value: string | Date | null | undefined): string {
   const date = toDate(value);
-  if (!date) return "—";
+  if (!date) return EMPTY;
   return date.toLocaleString("en-GB", {
     day: "2-digit",
     month: "short",
@@ -35,13 +37,13 @@ export function formatDateTime(value: string | Date | null | undefined): string 
 
 export function formatDate(value: string | Date | null | undefined): string {
   const date = toDate(value);
-  if (!date) return "—";
+  if (!date) return EMPTY;
   return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
 }
 
 export function formatRelative(value: string | Date | null | undefined, now = Date.now()): string {
   const date = toDate(value);
-  if (!date) return "—";
+  if (!date) return EMPTY;
   const diffMs = date.getTime() - now;
   const abs = Math.abs(diffMs);
   const minutes = Math.round(abs / 60_000);
@@ -74,7 +76,7 @@ export function initials(name: string | undefined | null): string {
 }
 
 export function maskPhone(phone: string | undefined | null): string {
-  if (!phone) return "—";
+  if (!phone) return EMPTY;
   const digits = phone.replace(/\D/g, "");
   if (digits.length < 4) return "•••";
   return `•••• •••${digits.slice(-3)}`;

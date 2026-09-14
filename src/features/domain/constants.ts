@@ -16,12 +16,12 @@ export const HUBS: Hub[] = [
 export const HUB_BY_CODE: Record<string, Hub> = Object.fromEntries(HUBS.map((hub) => [hub.code, hub]));
 
 export function hubName(code: string | undefined): string {
-  if (!code) return "—";
+  if (!code) return "-";
   return HUB_BY_CODE[code]?.name ?? code;
 }
 
 export function hubShort(code: string | undefined): string {
-  if (!code) return "—";
+  if (!code) return "-";
   return HUB_BY_CODE[code]?.short ?? code;
 }
 
@@ -41,7 +41,7 @@ export const ROUTES: Route[] = [
 export const ROUTE_BY_CODE: Record<string, Route> = Object.fromEntries(ROUTES.map((route) => [route.code, route]));
 
 export function routeLabel(code: string | undefined): string {
-  if (!code) return "—";
+  if (!code) return "-";
   const route = ROUTE_BY_CODE[code];
   if (route) return `${hubShort(route.origin)} → ${hubShort(route.dest)}`;
   const [origin, dest] = code.split("-");
@@ -80,7 +80,7 @@ export const CASE_STATUS_LABEL: Record<CaseStatus, string> = {
 export const NEXT_STEPS: Record<NextStep, { label: string; description: string; senderSafe: string }> = {
   evening_redelivery: {
     label: "Evening redelivery window",
-    description: "Dispatch again in the 6–9 pm window when the receiver said they would be home.",
+    description: "Dispatch again in the 6-9 pm window when the receiver said they would be home.",
     senderSafe: "A redelivery attempt is scheduled for this evening."
   },
   call_customer: {
@@ -124,7 +124,7 @@ export function teamForHub(hubCode: string): string {
 }
 
 export function teamLabel(team: string | undefined): string {
-  if (!team) return "—";
+  if (!team) return "-";
   if (team === "care") return "Customer care";
   if (team === "ops") return "Operations";
   if (team === "sender") return "Sender";

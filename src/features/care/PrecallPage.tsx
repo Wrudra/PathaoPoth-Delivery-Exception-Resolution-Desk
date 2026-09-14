@@ -97,7 +97,7 @@ export function PrecallPage() {
                   </div>
                   <div className="mt-1 text-[14px] font-semibold text-ink-900">{task.receiverName}</div>
                   <div className="text-[12px] text-ink-500">
-                    {task.area} · <span className="mono text-ink-700">{showPhone ? task.receiverPhone ?? "—" : maskPhone(task.receiverPhone)}</span>
+                    {task.area} · <span className="mono text-ink-700">{showPhone ? task.receiverPhone ?? "-" : maskPhone(task.receiverPhone)}</span>
                   </div>
                 </div>
                 <div className="text-[12px] leading-5 text-ink-600">{task.reason}</div>

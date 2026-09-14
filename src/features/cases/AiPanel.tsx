@@ -78,12 +78,12 @@ export function AiPanel({
           <Fact label="Availability" value={incident.preferredWindow ? INCIDENT_LABELS.window[incident.preferredWindow] : "none given"} hint={incident.availabilityHints[0]} />
           <Fact label="COD issue" value={incident.codIssue ? "yes" : "no"} />
           <Fact label="Refusal" value={incident.refusalFirm ? "firm" : "not firm"} />
-          <Fact label="Also noted" value={incident.secondaryReasons.length ? incident.secondaryReasons.map(titleCase).join(", ") : "—"} />
+          <Fact label="Also noted" value={incident.secondaryReasons.length ? incident.secondaryReasons.map(titleCase).join(", ") : "-"} />
         </dl>
 
         {manual && !confirmed ? (
           <Alert tone="warn" title="Manual review">
-            Confidence is {Math.round(incident.confidence * 100)}% — below the 60% bar for an automatic recommendation. A care agent picks the next step.
+            Confidence is {Math.round(incident.confidence * 100)}%. That is below the 60% bar for an automatic recommendation. A care agent picks the next step.
           </Alert>
         ) : null}
 

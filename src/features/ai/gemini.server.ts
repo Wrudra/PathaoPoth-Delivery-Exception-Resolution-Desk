@@ -98,7 +98,7 @@ Turn the rider note below into a structured incident. Rules:
   vague/incomplete/wrong address → address_verification; unreachable/unavailable without a window → call_customer; unclear → manual_review.
 - summary: one factual English sentence for staff. senderSafeSummary: one or two sentences for the merchant that reveal no phone numbers, no rider names, no blame.
 - confidence: 0..1, honest. Below 0.6 means a human should review. Do not bluff: if the note is unclear, say manual_review with low confidence.
-- rationale: 2–4 short bullets explaining the recommendation.
+- rationale: 2-4 short bullets explaining the recommendation.
 
 Context: case type = ${context.caseType ?? "unknown"}; COD amount = ${context.codAmount ?? 0} BDT; delivery area = ${context.area ?? "unknown"}.
 
@@ -125,7 +125,7 @@ export async function structureWithGemini(rawText: string, context: NoteContext,
     const rationale = [...value.rationale];
     if (!agrees && confidence < 0.75) {
       confidence = Math.min(confidence, 0.55);
-      rationale.push(`Cross-check: the rule engine read this as “${heuristic.recommendedAction.replaceAll("_", " ")}” — flagged for manual review.`);
+      rationale.push(`Cross-check: the rule engine read this as “${heuristic.recommendedAction.replaceAll("_", " ")}”. Flagged for manual review.`);
     } else if (agrees) {
       confidence = Math.min(0.97, Number((confidence + 0.03).toFixed(2)));
     }
@@ -175,9 +175,9 @@ export async function narrateForecast(request: RouteForecastRequest, signal?: Ab
   if (!geminiConfig()) return fallback;
 
   const prompt = `You are an operations analyst for a Bangladeshi courier. A forecasting model flagged a delivery lane as likely to fail again next week.
-Write for an ops manager: (1) a crisp 3–4 sentence narrative that names the route, the pattern, the evidence and the recommended action;
+Write for an ops manager: (1) a crisp 3-4 sentence narrative that names the route, the pattern, the evidence and the recommended action;
 (2) a short, polite Bangladeshi-English pre-call script care agents can read to COD receivers on this lane; (3) up to 4 watch-outs.
-Do not invent numbers — use only the evidence given.
+Do not invent numbers. Use only the evidence given.
 
 Route: ${request.routeLabel} (${request.routeCode})
 Recommended action: ${request.recommendedAction}

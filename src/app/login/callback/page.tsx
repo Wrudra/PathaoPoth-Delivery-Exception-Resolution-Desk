@@ -7,6 +7,7 @@ import { completeLogin } from "@/lib/blocks/auth";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/misc";
 import { LoadingScreen } from "@/components/ui/loading-screen";
+import { BrandMark, BrandWordmark } from "@/components/layout/BrandMark";
 
 export default function CallbackPage() {
   const { refresh } = useAuth();
@@ -33,6 +34,10 @@ export default function CallbackPage() {
     return (
       <div className="grid min-h-screen place-items-center bg-ink-50 px-6">
         <div className="w-full max-w-md rounded-2xl border border-ink-200 bg-white p-8 shadow-(--shadow-card)">
+          <div className="mb-6 flex items-center gap-3">
+            <BrandMark size={36} />
+            <BrandWordmark height={22} />
+          </div>
           <h2 className="text-[20px] font-bold text-ink-900">Sign-in failed</h2>
           <Alert tone="danger" className="mt-4">
             {error}
