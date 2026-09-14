@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.cert
+.env
+.env.*
+coverage
+*.pem
+npm-debug.log*
+.DS_Store
