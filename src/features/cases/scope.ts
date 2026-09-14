@@ -56,6 +56,7 @@ export function canAcknowledge(actor: Actor | undefined, item: ExceptionCase): b
 export function canResolve(actor: Actor | undefined, item: ExceptionCase): boolean {
   if (!actor) return false;
   if (item.status === "resolved" || item.status === "closed") return false;
+  if (actor.role === "rider" || actor.role === "sender") return false;
   return actor.role === "ops-manager" || actor.role === "care-agent" || item.ownerUserId === actor.userId || item.ownerTeam === actor.team;
 }
 

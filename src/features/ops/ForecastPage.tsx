@@ -7,11 +7,11 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Bot, CheckCircle2, PhoneCall, Route, Save, Sparkles, XCircle } from "lucide-react";
 import { narrateRoute } from "@/features/ai/client";
 import type { RouteForecastNarrative } from "@/features/ai/gemini.server";
-import { ROUTE_ACTION_LABEL, analyzeRoutes, type RouteRisk } from "@/features/ai/routeRisk";
+import { ROUTE_ACTION_LABEL, analyzeRoutes, headlineWeekOverWeek, type RouteRisk } from "@/features/ai/routeRisk";
 import { useActor } from "@/features/auth/useStaffProfile";
 import { createMany, createOne, nowIso, updateOne } from "@/features/data/gateway";
 import { queryKeys, useCases, useParcels, usePredictions } from "@/features/data/queries";
-import { EXCEPTION_TYPES, hubShort } from "@/features/domain/constants";
+import { EXCEPTION_TYPES, EXCEPTION_TYPE_LIST, hubShort } from "@/features/domain/constants";
 import type { ExceptionType, PrecallTask, RoutePrediction } from "@/features/domain/types";
 import { notifyTeam } from "@/features/notifications/notifier";
 import { useToast } from "@/components/ui/toast";
@@ -23,6 +23,14 @@ import { InlineSpinner } from "@/components/ui/loading-screen";
 import { formatDateTime, formatPercent, formatSignedPercent, formatTaka } from "@/lib/format";
 
 const RISK_TONE: Record<string, Tone> = { high: "danger", medium: "warn", low: "good" };
+
+const TYPE_COLORS: Record<ExceptionType, string> = {
+  refused: "#e83330",
+  delayed: "#d97706",
+  damaged: "#7a1a19",
+  address_missing: "#2563eb",
+  disputed: "#7c3aed"
+};
 
 export function ForecastPage() {
   const { actor } = useActor();
@@ -47,7 +55,7 @@ export function ForecastPage() {
         metrics: {
           exceptionsThisWeek: risk.weeks[risk.weeks.length - 1]?.exceptions ?? 0,
           exceptionsLastWeek: risk.weeks[risk.weeks.length - 2]?.exceptions ?? 0,
-          weekOverWeek: formatSignedPercent(risk.weekOverWeekChange),
+          weekOverWeek: formatSignedPercent(headlineWeekOverWeek(risk)),
           predictedRate: formatPercent(risk.predictedRate, 1),
           riskScore: Math.round(risk.riskScore * 100),
           dominantType: risk.dominantType
@@ -124,7 +132,7 @@ export function ForecastPage() {
         receiverPhone: parcel.receiverPhone,
         area: parcel.area,
         codAmount: parcel.codAmount,
-        reason: `${risk.label}: ${EXCEPTION_TYPES[risk.dominantType as ExceptionType]?.label ?? "exceptions"} ${formatSignedPercent(risk.weekOverWeekChange)} WoW, ${Math.round(risk.codShareOfRefused * 100)}% of refusals are COD. Confirm cash, address and window.`,
+        reason: `${risk.label}: ${EXCEPTION_TYPES[risk.dominantType as ExceptionType]?.label ?? "exceptions"} ${formatSignedPercent(headlineWeekOverWeek(risk))} WoW, ${Math.round(risk.codShareOfRefused * 100)}% of refusals are COD. Confirm cash, address and window.`,
         assignedToTeam: "care",
         status: "pending",
         createdByName: actor?.name ?? "Ops",
@@ -178,7 +186,7 @@ export function ForecastPage() {
               </div>
               <div className="mt-1 flex items-center justify-between text-[12px] text-ink-500">
                 <span>
-                  {risk.weeks[risk.weeks.length - 1]?.exceptions ?? 0} this wk · {formatSignedPercent(risk.weekOverWeekChange)}
+                  {risk.weeks[risk.weeks.length - 1]?.exceptions ?? 0} this wk · {formatSignedPercent(headlineWeekOverWeek(risk))}
                 </span>
                 <span className="tabular font-semibold text-ink-700">risk {Math.round(risk.riskScore * 100)}</span>
               </div>
@@ -213,16 +221,47 @@ export function ForecastPage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="text-[12px] font-bold uppercase tracking-wide text-ink-500">Weekly exceptions</h4>
+                  <h4 className="text-[12px] font-bold uppercase tracking-wide text-ink-500">Weekly exceptions by type</h4>
                   <div className="mt-2 h-[140px]">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={active.weeks.map((week, index) => ({ name: index === active.weeks.length - 1 ? "this wk" : `-${active.weeks.length - 1 - index}w`, exceptions: week.exceptions, projected: 0 })).concat([{ name: "next wk", exceptions: 0, projected: active.predictedExceptions }])} margin={{ left: 0, right: 0, top: 8, bottom: 0 }}>
+                      <BarChart
+                        data={active.weeks
+                          .map((week, index) => ({
+                            name: index === active.weeks.length - 1 ? "this wk" : `-${active.weeks.length - 1 - index}w`,
+                            ...Object.fromEntries(EXCEPTION_TYPE_LIST.map((type) => [type, week.byType[type] ?? 0])),
+                            projected: 0
+                          }))
+                          .concat([
+                            {
+                              name: "next wk",
+                              ...Object.fromEntries(EXCEPTION_TYPE_LIST.map((type) => [type, 0])),
+                              projected: active.predictedExceptions
+                            }
+                          ])}
+                        margin={{ left: 0, right: 0, top: 8, bottom: 0 }}
+                      >
                         <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#71717a" }} axisLine={false} tickLine={false} />
                         <Tooltip cursor={{ fill: "#fafafa" }} contentStyle={{ borderRadius: 12, border: "1px solid #e4e4e7", fontSize: 12 }} />
-                        <Bar dataKey="exceptions" stackId="a" fill="#18181b" radius={[6, 6, 0, 0]} name="Exceptions" />
+                        {EXCEPTION_TYPE_LIST.map((type, index) => (
+                          <Bar
+                            key={type}
+                            dataKey={type}
+                            stackId="a"
+                            fill={TYPE_COLORS[type]}
+                            name={EXCEPTION_TYPES[type].short}
+                            radius={index === EXCEPTION_TYPE_LIST.length - 1 ? [6, 6, 0, 0] : 0}
+                          />
+                        ))}
                         <Bar dataKey="projected" stackId="a" fill="#f37270" radius={[6, 6, 0, 0]} name="Projected" />
                       </BarChart>
                     </ResponsiveContainer>
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-ink-600">
+                    {EXCEPTION_TYPE_LIST.map((type) => (
+                      <span key={type} className="inline-flex items-center gap-1">
+                        <span className="h-2 w-2 rounded-sm" style={{ background: TYPE_COLORS[type] }} /> {EXCEPTION_TYPES[type].short}
+                      </span>
+                    ))}
                   </div>
                   <div className="mt-2 grid grid-cols-2 gap-2 text-[12px]">
                     <div className="rounded-lg bg-ink-50 px-2.5 py-2">

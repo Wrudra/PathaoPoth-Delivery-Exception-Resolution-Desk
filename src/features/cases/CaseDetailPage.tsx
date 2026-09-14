@@ -87,6 +87,19 @@ export function CaseDetailPage({ id }: { id: string }) {
         parcel.data
       ),
     onSuccess: ({ incident }) => {
+      queryClient.setQueryData(queryKeys.case(id), (current: typeof item.data) =>
+        current
+          ? {
+              ...current,
+              incidentJson: JSON.stringify(incident),
+              nextStep: incident.recommendedAction,
+              nextStepStatus: incident.needsManualReview ? "manual_review" : "recommended",
+              nextStepConfidence: incident.confidence,
+              nextStepSource: incident.source,
+              status: current.status === "open" ? "in_progress" : current.status
+            }
+          : current
+      );
       refresh();
       toast({
         tone: incident.needsManualReview ? "info" : "good",

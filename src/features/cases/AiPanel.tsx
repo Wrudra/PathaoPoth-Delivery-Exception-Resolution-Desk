@@ -30,8 +30,10 @@ export function AiPanel({
   onConfirm: (step: NextStep, note?: RiderNote) => void;
   confirming?: boolean;
 }) {
-  const incident = parseJson<IncidentSummary | undefined>(item.incidentJson, undefined);
   const latestNote = notes[0];
+  const incident =
+    parseJson<IncidentSummary | undefined>(item.incidentJson, undefined) ??
+    parseJson<IncidentSummary | undefined>(latestNote?.structuredJson, undefined);
   const [override, setOverride] = useState<NextStep | "">("");
   const [showEvidence, setShowEvidence] = useState(true);
 
@@ -113,6 +115,8 @@ export function AiPanel({
                   Confirm {step === incident.recommendedAction ? "recommendation" : "override"}
                 </Button>
               </div>
+            ) : !confirmed ? (
+              <p className="max-w-[240px] text-[12px] font-medium leading-5 text-ink-500">Care confirms or overrides this next step. Your desk cannot change it from here.</p>
             ) : null}
           </div>
         </div>
@@ -144,7 +148,7 @@ export function AiPanel({
         </div>
 
         <div className="rounded-xl border border-info-100 bg-info-100/40 px-4 py-3 text-[13px] leading-5 text-info-700">
-          <span className="font-semibold">Sender will read:</span> {incident.senderSafeSummary}
+          <span className="font-semibold">Sender will read:</span> {confirmed ? NEXT_STEPS[step].senderSafe : incident.senderSafeSummary}
         </div>
       </CardBody>
     </Card>

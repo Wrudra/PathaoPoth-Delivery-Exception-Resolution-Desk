@@ -8,7 +8,7 @@ import { updateOne } from "@/features/data/gateway";
 import { queryKeys, useCases, useParcels, useRiders, useStaffProfiles } from "@/features/data/queries";
 import { HUBS, ROLE_LABEL, SENDER_COMPANIES, hubName, teamForHub, teamLabel } from "@/features/domain/constants";
 import type { RoleSlug, StaffProfile } from "@/features/domain/types";
-import { resetDemoData, seedDemoData, type SeedProgress } from "@/features/seed/seedRunner";
+import { dedupeStaffProfiles, resetDemoData, seedDemoData, type SeedProgress } from "@/features/seed/seedRunner";
 import { useToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
@@ -52,12 +52,24 @@ export function AdminPage() {
       setProgress(undefined);
       setResult(undefined);
       void invalidateAll();
-      toast({ tone: "info", title: "Operational data cleared" });
+      toast({ tone: "info", title: "Desk emptied", description: "No parcels, riders, or cases. Staff mappings stay." });
     },
     onError: (error: Error) => {
       setProgress(undefined);
       toast({ tone: "danger", title: "Reset failed", description: error.message });
     }
+  });
+
+  const dedupe = useMutation({
+    mutationFn: dedupeStaffProfiles,
+    onSuccess: (removed) => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.staff });
+      toast({
+        tone: removed ? "good" : "info",
+        title: removed ? `Removed ${removed} extra mapping${removed === 1 ? "" : "s"}` : "No duplicate mappings"
+      });
+    },
+    onError: (error: Error) => toast({ tone: "danger", title: "Could not clean mappings", description: error.message })
   });
 
   const saveProfile = useMutation({
@@ -78,7 +90,19 @@ export function AdminPage() {
     );
   }
 
-  const busy = seed.isPending || wipe.isPending;
+  const busy = seed.isPending || wipe.isPending || dedupe.isPending;
+  const extraMappings = (() => {
+    const rows = staff.data ?? [];
+    const byUser = new Map<string, number>();
+    const byEmail = new Map<string, number>();
+    for (const row of rows) {
+      if (row.userId) byUser.set(row.userId, (byUser.get(row.userId) ?? 0) + 1);
+      if (row.email) byEmail.set(row.email.toLowerCase(), (byEmail.get(row.email.toLowerCase()) ?? 0) + 1);
+    }
+    const extraUsers = [...byUser.values()].reduce((sum, count) => sum + Math.max(0, count - 1), 0);
+    const extraEmails = [...byEmail.values()].reduce((sum, count) => sum + Math.max(0, count - 1), 0);
+    return Math.max(extraUsers, extraEmails);
+  })();
 
   return (
     <section>
@@ -127,15 +151,26 @@ export function AdminPage() {
                 Load without reset
               </Button>
               <Button variant="danger" icon={<Trash2 size={16} />} disabled={busy} loading={wipe.isPending} onClick={() => wipe.mutate()}>
-                Clear operational data
+                Empty desk
               </Button>
             </div>
-            <p className="text-[12px] text-ink-500">Staff mappings are never cleared. Re-run right before a demo so “this week” lines up with today.</p>
+            <p className="text-[12px] text-ink-500">Empty desk deletes cases, notes, forecasts, parcels and riders. Staff mappings stay. There is no leftover demo parcel.</p>
           </CardBody>
         </Card>
 
         <Card>
-          <CardHeader icon={<Users size={16} />} title="Team mapping" subtitle="Everyone who has signed in, with the hub / team / rider / merchant that scopes what they see." />
+          <CardHeader
+            icon={<Users size={16} />}
+            title="Team mapping"
+            subtitle="Everyone who has signed in, with the hub / team / rider / merchant that scopes what they see."
+            actions={
+              extraMappings ? (
+                <Button variant="outline" size="sm" disabled={busy} loading={dedupe.isPending} onClick={() => dedupe.mutate()}>
+                  Remove {extraMappings} duplicate{extraMappings === 1 ? "" : "s"}
+                </Button>
+              ) : null
+            }
+          />
           <CardBody className="p-0">
             {staff.isLoading ? <p className="px-5 py-6 text-[13px] text-ink-500">Loading…</p> : null}
             {staff.data && staff.data.length === 0 ? <p className="px-5 py-6 text-[13px] text-ink-500">Nobody has signed in yet. Profiles are created on first login with sensible defaults.</p> : null}

@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PackageSearch, Search, Zap } from "lucide-react";
 import { useActor } from "@/features/auth/useStaffProfile";
 import { useParcels } from "@/features/data/queries";
-import { EXCEPTION_TYPES, EXCEPTION_TYPE_LIST, hubName, hubShort, routeLabel } from "@/features/domain/constants";
+import { EXCEPTION_TYPES, EXCEPTION_TYPE_LIST, hubName, hubShort, isScriptedDemoParcel, routeLabel } from "@/features/domain/constants";
 import type { ExceptionType, Parcel } from "@/features/domain/types";
 import { useToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
@@ -37,8 +37,10 @@ export function NewCasePage() {
     const needle = query.trim().toLowerCase();
     const scoped = actor?.role === "hub-staff" && actor.hubCode ? list.filter((item) => item.originHubCode === actor.hubCode || item.destHubCode === actor.hubCode) : list;
     const source = scoped.length ? scoped : list;
-    if (!needle) return source.slice(0, 8);
-    return source.filter((item) => [item.trackingId, item.receiverName, item.area, item.senderCompany, item.riderName ?? ""].some((value) => value.toLowerCase().includes(needle))).slice(0, 8);
+    const matches = needle ? source.filter((item) => parcelSearchText(item).includes(needle)) : source;
+    return [...matches]
+      .sort((a, b) => demoRank(b) - demoRank(a) || new Date(b.lastTouchedAt ?? b.dispatchedAt ?? 0).getTime() - new Date(a.lastTouchedAt ?? a.dispatchedAt ?? 0).getTime())
+      .slice(0, 8);
   }, [actor, parcels.data, query]);
 
   const create = useMutation({
@@ -73,7 +75,7 @@ export function NewCasePage() {
         <CardBody className="grid gap-3">
           <div className="relative">
             <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400" />
-            <Input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="PP-2409-…, receiver name, GEC Circle, Dokan24…" className="pl-10" />
+            <Input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="PP-2609-…, GEC Circle, 2300, Dokan24…" className="pl-10" />
           </div>
           {parcels.isLoading ? <p className="text-[13px] text-ink-500">Loading parcels…</p> : null}
           {!parcels.isLoading && candidates.length === 0 ? <p className="text-[13px] text-ink-500">No open parcels match. Seed the demo data from Team &amp; data if this is a fresh project.</p> : null}
@@ -89,7 +91,7 @@ export function NewCasePage() {
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="mono text-[13px] font-semibold text-ink-900">{item.trackingId}</span>
-                        <Badge tone={item.status === "exception" ? "brand" : "neutral"}>{item.status.replace("_", " ")}</Badge>
+                        <Badge tone={item.status === "exception" ? "brand" : "neutral"}>{item.status.replaceAll("_", " ")}</Badge>
                         {item.paymentType === "cod" ? <Badge tone="warn">COD {formatTaka(item.codAmount)}</Badge> : <Badge tone="good">prepaid</Badge>}
                       </div>
                       <div className="mt-0.5 truncate text-[12px] text-ink-500">
@@ -149,4 +151,28 @@ function ReadOnly({ label, value, hint }: { label: string; value: string; hint?:
       {hint ? <div className="truncate text-[12px] text-ink-500">{hint}</div> : null}
     </div>
   );
+}
+
+function parcelSearchText(item: Parcel): string {
+  const taka = formatTaka(item.codAmount);
+  return [
+    item.trackingId,
+    item.receiverName,
+    item.area,
+    item.senderCompany,
+    item.riderName ?? "",
+    item.receiverAddress ?? "",
+    item.routeCode,
+    String(item.codAmount ?? ""),
+    taka,
+    taka.replace(/[৳,\s]/g, "")
+  ]
+    .join(" ")
+    .toLowerCase();
+}
+
+function demoRank(item: Parcel): number {
+  if (isScriptedDemoParcel(item)) return 2;
+  if (item.codAmount === 2300) return 1;
+  return 0;
 }

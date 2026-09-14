@@ -28,6 +28,8 @@ export type RouteRisk = {
   previousRate: number;
   baselineRate: number;
   weekOverWeekChange: number;
+  /** WoW on the dominant exception type (the number the manager acts on). */
+  dominantTypeWeekOverWeek: number | null;
   predictedRate: number;
   predictedExceptions: number;
   riskScore: number;
@@ -124,6 +126,9 @@ export function analyzeRoutes(cases: ExceptionCase[], parcels: Parcel[], options
     const topType: [ExceptionType | "none", number] = [...typeCounts.entries()].sort((a, b) => b[1] - a[1])[0] ?? ["none", 0];
     const [dominantType, dominantCount] = topType;
     const dominantShare = recentCases.length ? dominantCount / recentCases.length : 0;
+    const typeCurrent = dominantType === "none" ? 0 : (current.byType[dominantType] ?? 0);
+    const typePrevious = dominantType === "none" ? 0 : (previous?.byType[dominantType] ?? 0);
+    const dominantTypeWeekOverWeek = dominantType === "none" ? null : typePrevious > 0 ? typeCurrent / typePrevious - 1 : typeCurrent > 0 ? 1 : 0;
 
     const refused = recentCases.filter((item) => item.type === "refused");
     const codShareOfRefused = refused.length ? refused.filter((item) => item.codAmount >= 1000).length / refused.length : 0;
@@ -167,9 +172,7 @@ export function analyzeRoutes(cases: ExceptionCase[], parcels: Parcel[], options
       );
     }
     if (dominantType !== "none" && recentCases.length) {
-      const typeCurrent = current.byType[dominantType] ?? 0;
-      const typePrevious = previous?.byType[dominantType] ?? 0;
-      const typeChange = typePrevious > 0 ? typeCurrent / typePrevious - 1 : null;
+      const typeChange = dominantTypeWeekOverWeek;
       evidence.push(
         `${EXCEPTION_TYPES[dominantType].label} dominates: ${Math.round(dominantShare * 100)}% of recent exceptions${typeChange !== null ? ` (${typeCurrent} vs ${typePrevious}, ${typeChange >= 0 ? "+" : ""}${Math.round(typeChange * 100)}%)` : ` (${typeCurrent} this week)`}.`
       );
@@ -207,6 +210,7 @@ export function analyzeRoutes(cases: ExceptionCase[], parcels: Parcel[], options
       previousRate,
       baselineRate,
       weekOverWeekChange,
+      dominantTypeWeekOverWeek,
       predictedRate,
       predictedExceptions,
       riskScore,
@@ -244,6 +248,14 @@ export const ROUTE_ACTION_LABEL: Record<RouteAction, { label: string; descriptio
     description: "No actionable pattern yet; keep watching the weekly rate."
   }
 };
+
+/** Headline delta: dominant-type WoW when that type is concentrated, else overall. */
+export function headlineWeekOverWeek(risk: RouteRisk): number {
+  if (risk.dominantType !== "none" && risk.dominantShare >= 0.45 && risk.dominantTypeWeekOverWeek !== null) {
+    return risk.dominantTypeWeekOverWeek;
+  }
+  return risk.weekOverWeekChange;
+}
 
 export function describeRoute(routeCode: string): string {
   const route = ROUTE_BY_CODE[routeCode];

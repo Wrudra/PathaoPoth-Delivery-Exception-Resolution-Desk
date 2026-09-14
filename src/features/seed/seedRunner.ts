@@ -7,6 +7,29 @@ type Report = (progress: SeedProgress) => void;
 
 const RESETTABLE: SchemaName[] = ["SenderUpdate", "RiderNote", "CaseEvent", "PrecallTask", "RoutePrediction", "ExceptionCase", "Parcel", "Rider"];
 
+/** Keeps the oldest StaffProfile per userId/email so a double-provision cannot linger. */
+export async function dedupeStaffProfiles(): Promise<number> {
+  const rows = await listAll<StaffProfile>("StaffProfile");
+  const extras: string[] = [];
+  const sorted = [...rows].sort((a, b) => new Date(a.CreatedDate ?? 0).getTime() - new Date(b.CreatedDate ?? 0).getTime());
+  const byUser = new Map<string, StaffProfile>();
+  for (const row of sorted) {
+    const key = (row.userId || "").trim();
+    if (!key) continue;
+    if (byUser.has(key)) extras.push(row.ItemId);
+    else byUser.set(key, row);
+  }
+  const byEmail = new Map<string, StaffProfile>();
+  for (const row of sorted.filter((item) => !extras.includes(item.ItemId))) {
+    const email = (row.email || "").trim().toLowerCase();
+    if (!email) continue;
+    if (byEmail.has(email)) extras.push(row.ItemId);
+    else byEmail.set(email, row);
+  }
+  if (extras.length) await deleteMany("StaffProfile", extras);
+  return extras.length;
+}
+
 /** Deletes every row of the operational schemas. StaffProfile (real user mappings) is kept. */
 export async function resetDemoData(report: Report): Promise<void> {
   for (const name of RESETTABLE) {

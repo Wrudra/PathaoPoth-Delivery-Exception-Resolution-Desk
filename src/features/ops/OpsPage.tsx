@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { AlertTriangle, ArrowRight, Bike, Building2, Route, TrendingUp } from "lucide-react";
-import { analyzeRoutes } from "@/features/ai/routeRisk";
+import { analyzeRoutes, headlineWeekOverWeek } from "@/features/ai/routeRisk";
 import { useActor } from "@/features/auth/useStaffProfile";
 import { useCases, useParcels } from "@/features/data/queries";
 import { EXCEPTION_TYPES, EXCEPTION_TYPE_LIST, hubName, hubShort, routeLabel } from "@/features/domain/constants";
@@ -82,7 +82,7 @@ export function OpsPage() {
             </Badge>
           </div>
           <div className="mt-1 text-[20px] font-bold text-ink-900">
-            {topRisk.label}: {EXCEPTION_TYPES[topRisk.dominantType as ExceptionType]?.label.toLowerCase() ?? "exceptions"} {formatSignedPercent(topRisk.weekOverWeekChange)} week over week
+            {topRisk.label}: {EXCEPTION_TYPES[topRisk.dominantType as ExceptionType]?.label.toLowerCase() ?? "exceptions"} {formatSignedPercent(headlineWeekOverWeek(topRisk))} week over week
           </div>
           <p className="mt-1 text-[13px] leading-5 text-ink-700">{topRisk.evidence[0]} {topRisk.evidence[1]}</p>
           <span className="mt-2 inline-flex items-center gap-1 text-[13px] font-semibold text-brand-700">See the evidence and act <ArrowRight size={14} /></span>

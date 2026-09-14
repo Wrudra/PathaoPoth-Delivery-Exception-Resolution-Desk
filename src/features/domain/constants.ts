@@ -143,3 +143,8 @@ export const SEED_TAG = "demo-2026-09";
 
 /** Realistic Bangladeshi merchant names used by the seed and the sender demo mapping. */
 export const SENDER_COMPANIES = ["Dokan24", "Rokomari Books", "Aarong Online", "Chaldal", "Pickaboo", "Sailor Lifestyle"];
+
+/** The live demo parcel: COD ৳2,300, Mirpur 10 → GEC Circle. */
+export function isScriptedDemoParcel(parcel: { codAmount?: number; area?: string; originHubCode?: string; destHubCode?: string }): boolean {
+  return parcel.codAmount === 2300 && parcel.area === "GEC Circle" && parcel.originHubCode === "MIR10" && parcel.destHubCode === "CTGGEC";
+}

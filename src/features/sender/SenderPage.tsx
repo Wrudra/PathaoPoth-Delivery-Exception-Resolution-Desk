@@ -92,7 +92,7 @@ export function SenderPage() {
 
 function ParcelCard({ parcel, updates }: { parcel: SenderParcel; updates: SenderUpdate[] }) {
   const latest = updates[0];
-  const meta = latest ? STATUS_META[latest.status] : parcel.status === "delivered" ? STATUS_META.resolved : { label: parcel.status.replace("_", " "), tone: "neutral" as Tone };
+  const meta = latest ? STATUS_META[latest.status] : parcel.status === "delivered" ? STATUS_META.resolved : { label: parcel.status.replaceAll("_", " "), tone: "neutral" as Tone };
   return (
     <Card>
       <CardBody className="grid gap-4">

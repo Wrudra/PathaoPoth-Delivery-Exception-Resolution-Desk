@@ -22,6 +22,9 @@ export type Actor = {
   profile?: StaffProfile;
 };
 
+/** Prevents a Strict Mode remount from inserting a second StaffProfile. */
+const provisionInFlight = new Set<string>();
+
 /** Defaults used when a user signs in for the first time without a mapping. */
 function defaultProfile(
   userId: string,
@@ -89,18 +92,31 @@ export function useActor() {
     staleTime: 5 * 60_000
   });
 
-  const existing = useMemo(() => profiles.data?.find((item) => item.userId === userId), [profiles.data, userId]);
+  const existing = useMemo(() => {
+    if (!profiles.data) return undefined;
+    return profiles.data.find((item) => item.userId === userId) ?? profiles.data.find((item) => Boolean(user?.email) && item.email === user?.email);
+  }, [profiles.data, user?.email, userId]);
 
   const provision = useMutation({
     mutationFn: async () => {
       if (!userId || !role) return;
+      // Re-read so a Strict Mode remount cannot insert a second row for the same person.
+      const latest = await listAll<StaffProfile>("StaffProfile", { sort: { displayName: 1 } });
+      const already = latest.find((item) => item.userId === userId) ?? latest.find((item) => Boolean(user?.email) && item.email === user?.email);
+      if (already) {
+        const patch: Partial<StaffProfile> = {};
+        if (already.userId !== userId) patch.userId = userId;
+        if (user?.email && already.email !== user.email) patch.email = user.email;
+        if (Object.keys(patch).length) await updateOne<StaffProfile>("StaffProfile", already.ItemId, patch);
+        return;
+      }
       const payload = defaultProfile(
         userId,
         userDisplayName(user) || user?.email || "Staff",
         user?.email,
         role,
         riders.data ?? [],
-        profiles.data ?? []
+        latest
       );
       await createOne<StaffProfile>("StaffProfile", payload);
       if (role === "rider" && payload.riderId) {
@@ -115,10 +131,17 @@ export function useActor() {
 
   const attempted = useRef(false);
   useEffect(() => {
-    if (attempted.current || !userId || !role || !profiles.isSuccess || existing) return;
+    if (!userId || !role || !profiles.isSuccess || existing) return;
     if (role === "rider" && !riders.isSuccess) return;
+    if (attempted.current || provisionInFlight.has(userId)) return;
     attempted.current = true;
-    provision.mutate();
+    provisionInFlight.add(userId);
+    provision.mutate(undefined, {
+      onError: () => {
+        attempted.current = false;
+        provisionInFlight.delete(userId);
+      }
+    });
   }, [existing, profiles.isSuccess, provision, riders.isSuccess, role, userId]);
 
   const actor = useMemo<Actor | undefined>(() => {
